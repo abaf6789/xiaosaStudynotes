@@ -8,7 +8,7 @@ JavaScript就是JavaScript。不要强制使用任何规范去写JavaScript，�
 
 Javascript中最强大的就是**对象**和**函数**。JavaScript的对象不需要任何类就可以存在。在ES6之前，原形继承可以满足大多数的需求。ES6之后，应学会使用`class`语法来创建类或者继承。
 
-JavaScript中函数是一等公民
+JavaScript中函数是一等公民。
 
 ## 1.2 变量定义
 
@@ -267,4 +267,119 @@ flight.equipment && flight.equipment.model // undefined
 
 ## 1.7 `null`和`undefined`
 
-判断一个值是否是null
+判断一个值是否是`null`，直接使用`===`
+
+```javascript
+a == null 
+// 上面这句话等于下面这句话
+a === null || a === undefined
+//所以判断一个值是否是null用下面这句话
+if(a === null){
+    //...
+}
+```
+
+`undefined`这个值尽量不要自己使用，因为有时一个值可能是`undefined`。实际开发过程中，请求一个接口的数据，假如返回了一个对象，我们去访问这个对象的一个不存在的属性时，就会返回`undefined`。
+
+要判断余个属性是否存在，值为`null`也算存在，所以用`in`运算符去判断。
+
+```javascript
+var a ={ b: 1, c: null }
+"b" in a // true
+"c" in a // true
+"d" in a // false 
+```
+
+如果一定要判断某个值是否是`undefined`，用`typeof a ==="undefined"`。
+
+## 1.8 数组
+
+JavaScript中没有真正的数组，而是提供一些类数组的对象。它把数组下标转换成字符串，用其作为属性。它比真正的数组慢。
+
+JavaScript中，数组也是对象的一种形式。用`typeof`运算符报告数组的类型会返回`object`。
+
+### 数组字面量
+
+```javascript
+var a = []
+var b = ['zero', 1, 2 ]
+
+a[1]  // undefined
+b[1]  // 1
+b[0]  // "zero"
+
+a.length  // 0
+b.length  // 3
+```
+
+数组下标以0开始。数组字面量的原型是`Array.prototype`。
+
+就像上面声明的b这个数组一样，数组元素可以是混合类型（因为JavaScript是弱类型语言）。
+
+JavaScript中没有多维数组，但是数组里可以嵌套数组。
+
+```javascript
+var c = [[1,2],[3,4]]
+c[1][1]  //4
+```
+
+### 读写数组元素
+
+下标运算符`[]`将其中的表达式转换为一个字符串，转换使用的是表达式的`toString`方法。产生的字符串将作为属性名。
+
+```javascript
+var arr = [ 1, 2 ]
+arr[10] // 直接访问arr[10]的结果为undefined
+arr[10] = 3
+```
+
+上面定义了一个数组`arr`，当我们定义`arr[10] = 3`时，相当于给`arr`这个数组的第11个元素赋值，同时 ，也将数组长度扩大到11。此时`arr[2]`到`arr[9]`都是`undefined`。`arr.length`为11。
+
+直接给数组的`length`赋值相当于将数组设定成指定大小，长度可以比原数组更长或更短。
+
+如果要给数组的最后面追加元素的方法是push()
+
+```javascript
+var arr = [1,2]
+arr.push('three')
+arr // [1,2,'three']
+```
+
+### 删除
+
+使用`delete`删除数组元素，但是这个删除会留下”空洞“。`delete`不是从数组中移除一个元素，而是将指定位置上的值置为`undefined`。
+
+```javascript
+var a = [1,2,3]
+delete a[1] 
+a   //[1, undefined, 3]
+```
+
+实际开发中，用的比较多的是`splice(start, deleteCount)`。需要传递两个参数，第一个参数指定开始删除的位置，第二个参数指定删除的个数。
+
+```javascript
+var a = [1,2,3]
+a.splice(0,2)
+a  // [3]
+```
+
+这里补充一个在日常工作中经常和`splice`共同使用的方法：`indexOf()`
+
+`indexOf()`方法返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
+
+```javascript
+var a = [2,3,5,7,9]
+a.indexOf(2) //0
+a.indexOf(5) //2
+```
+
+`indexOf`可以返回指定元素的**第一个索引**，这里注意，是第一个索引，所以接下来要讲的这个方法，如果数组中有重复元素，就尽量不要使用，或者根据需求使用。
+
+```javascript
+var a = [2,3,5,7,9]
+//现在要删除7这个元素
+a.splice(a.indexOf(7), 1)
+console.log(a)  // [2,3,5,9]
+```
+
+这个方法可以用来删除数组中的指定的某个值的元素，就比如我取到了一连串不同的`id`，要删除其中指定的某个，就可以用上述方法。
