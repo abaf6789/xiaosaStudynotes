@@ -91,3 +91,36 @@ console.log(a.sort().toString == b.sort().toString) //true
 ```
 
 这样的话就算顺序不同也可以进行比较
+
+## 根据数组中对象的某个属性进行排序
+
+```javascript
+var arr = [
+    {name:"你",index:1},
+    {name:"你",index:3},
+    {name:"你",index:2}
+]
+
+function compare(property) {
+    return function(a,b) {
+        var value1 = a[property]
+        var value2 = b[property]
+        return value1 - value2
+    }
+}
+
+arr.sort(compare('index'))
+```
+
+箭头函数
+
+```javascript
+var arr = [
+    {name:"你",index:1},
+    {name:"你",index:3},
+    {name:"你",index:2}
+]
+
+arr.sort(()=>a.index-b.index)
+```
+
