@@ -1,4 +1,8 @@
+[TOC]
+
 # React工作问题收集总结
+
+
 
 ## 1.如何修改state中一个对象的某个属性
 
@@ -41,3 +45,28 @@ componentDidUpdate(){
 ```
 
 在`componentDidUpdate`中调用的`state`是最新状态。
+
+## 3.深拷贝在工作中的使用
+
+第一种情况：**修改state中一个对象的某个属性**，这里用到深拷贝。
+
+第二种情况：当我们想将`this.state.object`当成一个参数传递。
+
+```react
+function handleIntroduction(introduction){
+    //假如这里的操作会对introduction产生改变
+}
+const introduction = this.state.introduction
+handleIntroduction(introduction)
+```
+
+上面的例子当我们把`introduction`传入，在`introduction`改变的同时，`state`中的`introduction`也发生了改变，从而会影响页面的渲染，所以这里要使用深拷贝
+
+```react
+function handleIntroduction(introduction){
+    //假如这里的操作会对introduction产生改变
+}
+const introduction = Object.assign({}, this.state.introduction)
+handleIntroduction(introduction)
+```
+
