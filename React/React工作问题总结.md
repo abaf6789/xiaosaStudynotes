@@ -1,5 +1,3 @@
-[TOC]
-
 # React工作问题收集总结
 
 
@@ -70,3 +68,44 @@ const introduction = Object.assign({}, this.state.introduction)
 handleIntroduction(introduction)
 ```
 
+## 4.父子组件的通信问题
+
+#### 1.子组件内部如何接收到父组件`state`中的值，接收后如何修改父组件中的`state`？
+
+##### 父组件
+
+```javascript
+this.state={
+    intro: "aaa"
+}
+
+class Parent extends Component {
+    revise(intro){
+        this.setState({intro:intro})
+    }
+    render() {
+        return (
+            <Child intro={this.state.intro} />
+        )
+    }
+}
+```
+
+##### 子组件
+
+```javascript
+class Child extends Component {
+    receiveProps(){
+        	let intro = this.props.intro
+            intro = "bbb"
+        	this.props.revise(intro)
+        }
+    render() {
+        return (
+            <Ceshi/>
+        )
+      }
+    }
+```
+
+除了父组件中`state`的状态可以传递，父组件中的方法也是可以通过`props`来传递的，通过传入的方法，将修改后的参数传入函数，在父组件中更新`state`就可以完成**子组件修改父组件中的`state`了**。
