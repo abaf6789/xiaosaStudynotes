@@ -101,3 +101,62 @@ input:checked+i {
 这里用到了`css`的相邻选择器，这样当`input`被`checked`时就可以控制`i`标签以及伪类的样式了。
 
 **这样就完成了input默认样式的修改**。
+
+## 2.移动端背景图片如何处理？
+
+之前的一个项目中遇到了一个背景图片的问题，这个问题的两大特点：
+
+1. 移动端
+2. 背景图片中还有其他背景图片的嵌套
+
+​	首先移动端所以需要考虑到各种不同屏幕的自适应问题，然后背景图中还有其他背景图片嵌套，这里只用rem显然是不行的，需要使用百分比。
+
+```html
+<div class="outer">
+    <div class="inner-wrap">
+        <div class="inner-content">
+           
+        </div>	
+    </div>
+</div>
+```
+
+​	上面的结构就是在项目中所使用的，首先最外层的`outer`是外层的背景图片所在的`div`，中间用了`inner-wrap`这个类去做一层包裹，这层的包裹作用在于让内部的`inner-content`的内容能固定在这个容器中，这样能让内容随着百分比自适应。
+
+```css
+.outer {
+    width:100%;
+    height:0;
+    padding-top:58%;
+    background:url("url") no-repeat;
+    background-size:contain;
+    position:relative;
+}
+.inner-wrap {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    box-sizing:border-box;
+}
+.inner-content {
+    background:url("url") no-repeat;
+    background-size:contain;
+    padding-top:30%
+}
+```
+
+​	外层采用相对定位，内层用一层`wrapper`绝对定位来保持自适应。
+
+​	背景图片的大小控制使用了宽度100%，不设高度，利用`padding-top`或者`padding-bottom`来控制大小。
+
+## 3.背景图片在IphoneX上的适配问题
+
+​	一般UI给的视觉图是以iphone6这个尺寸来给的，所以有些背景图片的大小会不够，在iPhoneX上无法撑满，导致屏幕会有留白问题，这里就要使用`background`的渐变来控制
+
+```css
+background:#2848d1 url(url) no-repeat
+```
+
+当背景图片的大小不够时，会使用给定的颜色来填充剩下的部分。
